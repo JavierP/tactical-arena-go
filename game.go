@@ -28,6 +28,16 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
+		g.Match.MoveActiveHero(1, 0)
+	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
+		g.Match.MoveActiveHero(-1, 0)
+	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
+		g.Match.MoveActiveHero(0, 1)
+	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		g.Match.MoveActiveHero(0, -1)
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.Match.EndTurn()
 	}

@@ -35,3 +35,41 @@ func (m *Match) EndTurn() {
 	hero.AP = maxAP
 	hero.MP = maxMP
 }
+
+func (m *Match) MoveActiveHero(dx, dy int) bool {
+	if dx > 1 || dx < -1 {
+		return false
+	}
+	if dy > 1 || dy < -1 {
+		return false
+	}
+	if dx == 0 && dy == 0 {
+		return false
+	}
+	if dx != 0 && dy != 0 {
+		return false
+	}
+
+	hero := &m.Heroes[m.Active]
+
+	if hero.MP < 1 {
+		return false
+	}
+
+	destx := hero.X + dx
+	desty := hero.Y + dy
+
+	if destx < 0 || destx >= boardSize || desty < 0 || desty >= boardSize {
+		return false
+	}
+
+	otherHero := &m.Heroes[1-m.Active]
+	if destx == otherHero.X && desty == otherHero.Y {
+		return false
+	}
+
+	hero.X = destx
+	hero.Y = desty
+	hero.MP -= 1
+	return true
+}
