@@ -28,6 +28,12 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	if g.Match.Finished {
+		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+			g.Match = NewMatch()
+			return nil
+		}
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
 		g.Match.MoveActiveHero(1, 0)
 	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
@@ -103,9 +109,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	if g.Match.Finished {
 		if g.Match.Heroes[0].HP > 0 {
-			ebitenutil.DebugPrint(screen, "Player 1 Won!")
+			ebitenutil.DebugPrint(screen, "Player 1 Won!\nR: Restart")
 		} else {
-			ebitenutil.DebugPrint(screen, "Player 2 Won!")
+			ebitenutil.DebugPrint(screen, "Player 2 Won!\nR: Restart")
 		}
 	} else {
 		hero := g.Match.Heroes[g.Match.Active]
