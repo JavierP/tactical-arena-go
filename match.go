@@ -14,8 +14,9 @@ type Hero struct {
 }
 
 type Match struct {
-	Heroes [2]Hero
-	Active int
+	Heroes   [2]Hero
+	Active   int
+	Finished bool
 }
 
 func NewMatch() *Match {
@@ -29,6 +30,9 @@ func NewMatch() *Match {
 }
 
 func (m *Match) EndTurn() {
+	if m.Finished {
+		return
+	}
 	m.Active = 1 - m.Active
 
 	hero := &m.Heroes[m.Active]
@@ -37,6 +41,9 @@ func (m *Match) EndTurn() {
 }
 
 func (m *Match) MoveActiveHero(dx, dy int) bool {
+	if m.Finished {
+		return false
+	}
 	if dx > 1 || dx < -1 {
 		return false
 	}
@@ -71,5 +78,42 @@ func (m *Match) MoveActiveHero(dx, dy int) bool {
 	hero.X = destx
 	hero.Y = desty
 	hero.MP -= 1
+	return true
+}
+
+func (m *Match) Strike() bool {
+	if m.Finished {
+		return false
+	}
+	hero := &m.Heroes[m.Active]
+	otherHero := &m.Heroes[1-m.Active]
+
+	if hero.AP < 1 {
+		return false
+	}
+
+	horizontalDistance := otherHero.X - hero.X
+	verticalDistance := otherHero.Y - hero.Y
+
+	if horizontalDistance < 0 {
+		horizontalDistance = -horizontalDistance
+	}
+	if verticalDistance < 0 {
+		verticalDistance = -verticalDistance
+	}
+
+	totalDistance := horizontalDistance + verticalDistance
+
+	if totalDistance != 1 {
+		return false
+	}
+
+	hero.AP -= 1
+	otherHero.HP -= 5
+
+	if otherHero.HP <= 0 {
+		otherHero.HP = 0
+		m.Finished = true
+	}
 	return true
 }

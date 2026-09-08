@@ -38,6 +38,10 @@ func (g *Game) Update() error {
 		g.Match.MoveActiveHero(0, -1)
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
+		g.Match.Strike()
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.Match.EndTurn()
 	}
@@ -97,15 +101,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		)
 	}
 
-	hero := g.Match.Heroes[g.Match.Active]
+	if g.Match.Finished {
+		if g.Match.Heroes[0].HP > 0 {
+			ebitenutil.DebugPrint(screen, "Player 1 Won!")
+		} else {
+			ebitenutil.DebugPrint(screen, "Player 2 Won!")
+		}
+	} else {
+		hero := g.Match.Heroes[g.Match.Active]
 
-	ebitenutil.DebugPrint(screen, fmt.Sprintf(
-		"Player %d's turn\nHP: %d | AP: %d | MP: %d\nSPACE: End turn",
-		g.Match.Active+1,
-		hero.HP,
-		hero.AP,
-		hero.MP,
-	))
+		ebitenutil.DebugPrint(screen, fmt.Sprintf(
+			"Player 1 HP:%d\nPlayer 2 HP:%d\nPlayer %d turn AP: %d | MP: %d\nSPACE: End turn\nF: Strike",
+			g.Match.Heroes[0].HP,
+			g.Match.Heroes[1].HP,
+			g.Match.Active+1,
+			hero.AP,
+			hero.MP,
+		))
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
