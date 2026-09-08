@@ -1,4 +1,4 @@
-# Rune & Rival
+# tactical-arena-go
 
 A turn-based fantasy arena game built with **Go and Ebitengine**, developed as a hands-on project to learn game programming.
 
