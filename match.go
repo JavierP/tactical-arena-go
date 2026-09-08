@@ -16,17 +16,22 @@ type Hero struct {
 type Match struct {
 	Heroes   [2]Hero
 	Active   int
+	Walls    [boardSize][boardSize]bool
 	Finished bool
 }
 
 func NewMatch() *Match {
-	return &Match{
+	localMatch := &Match{
 		Heroes: [2]Hero{
 			{X: 1, Y: 4, HP: 20, AP: maxAP, MP: maxMP},
 			{X: 8, Y: 4, HP: 20, AP: maxAP, MP: maxMP},
 		},
 		Active: 0,
 	}
+	localMatch.Walls[4][3] = true
+	localMatch.Walls[4][4] = true
+	localMatch.Walls[4][5] = true
+	return localMatch
 }
 
 func (m *Match) EndTurn() {
@@ -66,10 +71,15 @@ func (m *Match) MoveActiveHero(dx, dy int) bool {
 	destx := hero.X + dx
 	desty := hero.Y + dy
 
+	// Checking board limits
 	if destx < 0 || destx >= boardSize || desty < 0 || desty >= boardSize {
 		return false
 	}
-
+	// Checking for Walls
+	if m.Walls[destx][desty] {
+		return false
+	}
+	// checking for other Player
 	otherHero := &m.Heroes[1-m.Active]
 	if destx == otherHero.X && desty == otherHero.Y {
 		return false

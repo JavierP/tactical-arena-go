@@ -31,8 +31,8 @@ func (g *Game) Update() error {
 	if g.Match.Finished {
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 			g.Match = NewMatch()
-			return nil
 		}
+		return nil
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
 		g.Match.MoveActiveHero(1, 0)
@@ -63,6 +63,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			tileColor := color.RGBA{65, 70, 80, 255}
 			if (x+y)%2 == 0 {
 				tileColor = color.RGBA{75, 80, 90, 255}
+			}
+			if g.Match.Walls[x][y] {
+				tileColor = color.RGBA{45, 50, 60, 255}
 			}
 			vector.FillRect(
 				screen,
@@ -107,6 +110,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		)
 	}
 
+	// gui infos
 	if g.Match.Finished {
 		if g.Match.Heroes[0].HP > 0 {
 			ebitenutil.DebugPrint(screen, "Player 1 Won!\nR: Restart")
@@ -115,7 +119,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	} else {
 		hero := g.Match.Heroes[g.Match.Active]
-
 		ebitenutil.DebugPrint(screen, fmt.Sprintf(
 			"Player 1 HP:%d\nPlayer 2 HP:%d\nPlayer %d turn AP: %d | MP: %d\nSPACE: End turn\nF: Strike",
 			g.Match.Heroes[0].HP,
