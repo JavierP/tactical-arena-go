@@ -46,6 +46,19 @@ func (m *Match) EndTurn() {
 }
 
 func (m *Match) MoveActiveHero(dx, dy int) bool {
+	if !m.CanMoveActiveHero(dx, dy) {
+		return false
+	}
+
+	hero := &m.Heroes[m.Active]
+
+	hero.X = hero.X + dx
+	hero.Y = hero.Y + dy
+	hero.MP -= 1
+	return true
+}
+
+func (m *Match) CanMoveActiveHero(dx, dy int) bool {
 	if m.Finished {
 		return false
 	}
@@ -84,10 +97,6 @@ func (m *Match) MoveActiveHero(dx, dy int) bool {
 	if destx == otherHero.X && desty == otherHero.Y {
 		return false
 	}
-
-	hero.X = destx
-	hero.Y = desty
-	hero.MP -= 1
 	return true
 }
 

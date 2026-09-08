@@ -67,6 +67,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			if g.Match.Walls[x][y] {
 				tileColor = color.RGBA{45, 50, 60, 255}
 			}
+
 			vector.FillRect(
 				screen,
 				float32(x*tileSize),
@@ -76,6 +77,25 @@ func (g *Game) Draw(screen *ebiten.Image) {
 				tileColor,
 				false,
 			)
+
+			// overlay for movement
+			activeHero := g.Match.Heroes[g.Match.Active]
+			dx := x - activeHero.X
+			dy := y - activeHero.Y
+
+			if g.Match.CanMoveActiveHero(dx, dy) {
+				overlayMove := color.NRGBA{R: 80, G: 150, B: 110, A: 65}
+				vector.FillRect(
+					screen,
+					float32(x*tileSize),
+					float32(boardOffsetY+y*tileSize),
+					float32(tileSize-1),
+					float32(tileSize-1),
+					overlayMove,
+					false,
+				)
+			}
+
 		}
 	}
 
