@@ -28,12 +28,15 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	// R: Restart
 	if g.Match.Finished {
 		if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 			g.Match = NewMatch()
 		}
 		return nil
 	}
+
+	// Movement: Arrow Key
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
 		g.Match.MoveActiveHero(1, 0)
 	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
@@ -43,11 +46,23 @@ func (g *Game) Update() error {
 	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
 		g.Match.MoveActiveHero(0, -1)
 	}
-
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		mX, mY := ebiten.CursorPosition()
+		if (mX >= 0 && mX < boardSize*tileSize) && (mY >= boardOffsetY && mY < boardOffsetY+boardSize*tileSize) {
+			tileX := mX / tileSize
+			tileY := (mY - boardOffsetY) / tileSize
+			activeHero := g.Match.Heroes[g.Match.Active]
+			dx := tileX - activeHero.X
+			dy := tileY - activeHero.Y
+			g.Match.MoveActiveHero(dx, dy)
+		}
+	}
+	// F: Strike
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		g.Match.Strike()
 	}
 
+	// SPACE: EndTurn
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.Match.EndTurn()
 	}
