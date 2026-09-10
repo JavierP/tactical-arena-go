@@ -66,3 +66,18 @@ func (m *Match) MoveActiveHero(dx, dy int) bool {
 	hero.MP -= m.MovementCost(hero.X, hero.Y)
 	return true
 }
+
+func (m *Match) ReachableCosts() [boardSize][boardSize]int {
+	/*Create a board-sized grid of integer costs.
+
+	Visit every cell:
+	    Mark its cost as -1.
+
+	If the match has finished:
+	    Return that grid.
+
+	Find the active hero's position.
+	Mark that position with cost 0.
+
+	Return the grid.*/
+}
